@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 600px;">
+    <h2 style="text-align:center; color: var(--dark-green); margin-bottom: 2rem;">Checkout</h2>
+    
+    <div style="background-color: var(--light-green); padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h3 style="margin-top: 0; margin-bottom: 0.5rem;">Order Summary</h3>
+        <p style="margin: 0; font-size: 1.2rem; font-weight: bold;">Total Amount: <span style="color: var(--accent-color);">₹{{ total }}</span></p>
+    </div>
+
+    <form method="POST" action="{{ url_for('checkout') }}">
+        <div class="form-group">
+            <label>Shipping Address Details</label>
+            <div class="grid-2-col" style="margin-top: 0.5rem;">
+                <input type="text" name="house_no" placeholder="House No. / Flat No." required class="form-select" style="padding: 0.75rem;">
+                <input type="text" name="street" placeholder="Street / Locality" required class="form-select" style="padding: 0.75rem;">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr; margin-top: 1rem;">
+                <input type="text" name="landmark" placeholder="Nearest Landmark (Optional)" class="form-select" style="padding: 0.75rem;">
+            </div>
+            <div class="grid-3-col" style="margin-top: 1rem;">
+                <input type="text" name="city" placeholder="City" required class="form-select" style="padding: 0.75rem;">
+                <input type="text" name="state" placeholder="State" required class="form-select" style="padding: 0.75rem;">
+                <input type="text" name="pincode" placeholder="Pincode" required class="form-select" style="padding: 0.75rem;">
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label for="payment">Payment Method</label>
+            <select id="payment" name="payment" required>
+                <option value="cod">Cash on Delivery (COD)</option>
+                <option value="card">Credit/Debit Card (Mock Flow)</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn-primary add-to-cart-btn" style="width: 100%; font-size: 1.1rem;">Place Order</button>
+    </form>
+</div>
+{% endblock %}

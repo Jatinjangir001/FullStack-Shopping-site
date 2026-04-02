@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="products-container" style="max-width: 1000px;">
+    <div class="dashboard-header" style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; justify-content: space-between; border-bottom: 2px solid var(--light-green); padding-bottom: 1rem; margin-bottom: 2rem;">
+    <h1 style="margin: 0; color: var(--dark-green);">Mommy's Herbal Admin</h1>
+    <div style="display: flex; gap: 1rem;">
+        <a href="{{ url_for('add_product') }}" class="btn-primary">+ Add New Product</a>
+        
+        <a href="{{ url_for('admin_orders') }}" class="btn-amazon" style="border-radius: 8px; text-decoration: none; position: relative;">
+            View Customer Orders
+            {% if new_orders_count > 0 %}
+                <span style="position: absolute; top: -10px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; padding: 4px 8px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">{{ new_orders_count }} New</span>
+            {% endif %}
+        </a>
+    </div>
+</div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                    {% if product.image_url %}
+                        <img src="{{ url_for('static', filename=product.image_url) }}" alt="Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
+                <td>{{ product.name }}</td>
+                <td>₹{{ product.price }}</td>
+                <td>
+                    {% if product.is_out_of_stock %}
+                        <span style="color: #e74c3c; font-weight: bold;">Out of Stock</span>
+                    {% else %}
+                        <span style="color: var(--primary-green); font-weight: bold;">In Stock</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="{{ url_for('edit_product', product_id=product._id) }}" class="btn-secondary" style="font-size: 0.8rem; padding: 0.25rem 0.5rem;">Edit</a>
+                        <form action="{{ url_for('delete_product', product_id=product._id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                            <button type="submit" class="btn-danger" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; cursor: pointer;">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" style="text-align: center;">No products found. Start by adding some!</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

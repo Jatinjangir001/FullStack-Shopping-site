@@ -1,0 +1,7 @@
+Flask==3.0.2
+pymongo==4.6.2
+Flask-Login==0.6.3
+Werkzeug==3.0.1
+python-dotenv==1.0.1
+phonenumbers==8.13.31
+email-validator==2.1.0.post1

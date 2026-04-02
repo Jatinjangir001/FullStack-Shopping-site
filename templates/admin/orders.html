@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="products-container" style="max-width: 1200px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: var(--dark-green);">Customer Orders</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary">Back to Products</a>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Order Date/ID</th>
+                <th>Customer Info</th>
+                <th>Items Ordered</th>
+                <th>Shipping Address</th>
+                <th>Total Price</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td style="font-size: 0.85rem; color: #7f8c8d;">
+                    {{ order._id }}
+                </td>
+                <td>
+                    <strong>{{ order.user_name }}</strong><br>
+                    <span style="font-size: 0.85rem;">{{ order.user_email }}</span><br>
+                    <span style="font-size: 0.85rem;">📞 {{ order.user_mobile }}</span>
+                </td>
+                <td>
+                    <ul style="margin: 0; padding-left: 1rem; font-size: 0.9rem;">
+                        {% for item in order['items'] %}
+                            <li>
+                                {{ item.quantity }}x {{ item.name }} 
+                                {% if item.size %}<span style="color: var(--dark-green);">({{ item.size }})</span>{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td style="font-size: 0.9rem; max-width: 200px; line-height: 1.4;">
+                    {% if order.shipping_address is mapping %}
+                        <div style="font-size: 0.9rem; line-height: 1.5; color: #444;">
+                            <div><strong>House/Flat:</strong> {{ order.shipping_address.house_no }}</div>
+                            <div><strong>Street:</strong> {{ order.shipping_address.street }}</div>
+                            {% if order.shipping_address.landmark %}
+                            <div><strong>Landmark:</strong> {{ order.shipping_address.landmark }}</div>
+                            {% endif %}
+                            <div><strong>City:</strong> {{ order.shipping_address.city }}, {{ order.shipping_address.state }}</div>
+                            <div><strong>Pincode:</strong> <span style="font-weight: 600; color: var(--dark-green);">{{ order.shipping_address.pincode }}</span></div>
+                        </div>
+                    {% else %}
+                        {{ order.shipping_address }}
+                    {% endif %}
+                </td>
+                <td style="font-weight: bold; color: var(--accent-color);">₹{{ order.total }}</td>
+                <td>
+                    <span style="padding: 0.25rem 0.5rem; border-radius: 4px; background-color: #f39c12; color: white; font-size: 0.8rem; font-weight: bold;">{{ order.status }}</span>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem;">No orders have been placed yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

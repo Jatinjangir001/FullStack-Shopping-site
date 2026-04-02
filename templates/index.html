@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="background: linear-gradient(135deg, #1a3622 0%, #2e7d32 100%); color: white; padding: 4rem 2rem; border-bottom: 4px solid #ffd814;">
+    <h1 style="font-family: 'Georgia', serif; font-size: 3.5rem; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); color: white;">Mommy's Herbal</h1>
+    <p class="hero-subtitle" style="font-size: 1.25rem; font-weight: 500; color: #ffd814; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Premium Hand-Crafted Organic Remedies</p>
+    <p class="hero-text" style="max-width: 600px; margin: 0 auto; color: #e1e8ed; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">Our products are entirely homemade with love, free from synthetic chemicals, and crafted purely from nature's best ingredients to deeply nourish your skin and hair.</p>
+</section>
+
+<div class="filters-container">
+    <form action="{{ url_for('index') }}" method="GET" class="search-form">
+        <input type="text" name="search" placeholder="Search for homemade products..." value="{{ search_query }}">
+        <input type="hidden" name="category" value="{{ current_category }}">
+        <button type="submit" class="btn-primary" style="padding: 0.75rem 1.5rem;">Search</button>
+    </form>
+    
+    <div class="category-pills">
+        <a href="{{ url_for('index', category='All', search=search_query) }}" class="pill {% if current_category == 'All' %}active{% endif %}">All</a>
+        <a href="{{ url_for('index', category='Hair Oil', search=search_query) }}" class="pill {% if current_category == 'Hair Oil' %}active{% endif %}">Hair Oils</a>
+        <a href="{{ url_for('index', category='Shampoo', search=search_query) }}" class="pill {% if current_category == 'Shampoo' %}active{% endif %}">Shampoos</a>
+        <a href="{{ url_for('index', category='Serum', search=search_query) }}" class="pill {% if current_category == 'Serum' %}active{% endif %}">Serums</a>
+        <a href="{{ url_for('index', category='Comb', search=search_query) }}" class="pill {% if current_category == 'Comb' %}active{% endif %}">Combs</a>
+        <a href="{{ url_for('index', category='Other', search=search_query) }}" class="pill {% if current_category == 'Other' %}active{% endif %}">Others</a>
+    </div>
+</div>
+
+<div class="products-container">
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card" style="position: relative;">
+            <span class="category-badge">{{ product.category }}</span>
+            <a href="{{ url_for('product_detail', product_id=product._id) }}" style="text-decoration: none; color: inherit; display: block;">
+                {% if product.image_url %}
+                    <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                    <div class="product-image" style="display:flex; align-items:center; justify-content:center; color: var(--dark-green);">No Image</div>
+                {% endif %}
+            </a>
+            
+            <div class="product-info">
+                <a href="{{ url_for('product_detail', product_id=product._id) }}" style="text-decoration: none; color: inherit; display: block;">
+                    <h3 class="product-title">{{ product.name }}</h3>
+                </a>
+                <div class="product-price">₹{{ product.price }}</div>
+                <p>{{ product.description[:60] }}...</p>
+                
+                {% if product.is_out_of_stock %}
+                    <div class="out-of-stock" style="margin-top: auto;">Currently Unavailable</div>
+                {% else %}
+                    <form action="{{ url_for('add_to_cart', product_id=product._id) }}" method="POST" style="margin-top: auto;">
+                        <div class="card-controls">
+                            <select name="quantity" class="form-select" style="flex: 1; min-width: 60px;">
+                                {% for i in range(1, 11) %}
+                                    <option value="{{ i }}">Qty: {{ i }}</option>
+                                {% endfor %}
+                            </select>
+                            
+                            {% if product.sizes %}
+                            <select name="size" class="form-select" style="flex: 2;">
+                                {% for s in product.sizes %}
+                                    {% if s is mapping %}
+                                        <option value="{{ s.size }}">{{ s.size }} - ₹{{ s.price }}</option>
+                                    {% else %}
+                                        <option value="{{ s }}">{{ s }} - ₹{{ product.price }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% endif %}
+                        </div>
+                        
+                        <button type="submit" class="btn-amazon add-to-cart-btn" style="width:100%; border:none;">
+                            &#128722; Add to Cart
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+            <p style="text-align:center; grid-column: 1 / -1;">No products available yet. Check back soon!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* HEADER */
+header {
+    background: #2e7d32;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 22px;
+}
+
+nav a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* HERO */
+.hero {
+    position: relative;
+}
+
+.hero img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+.hero-text {
+    position: absolute;
+    top: 30%;
+    left: 10%;
+    color: white;
+}
+
+.hero-text h2 {
+    font-size: 36px;
+}
+
+.hero-text button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    background: #66bb6a;
+    color: white;
+    cursor: pointer;
+}
+
+/* PRODUCT SECTION */
+.product-section {
+    padding: 40px;
+    background: #f1f8e9;
+}
+
+.product-section h2 {
+    margin-bottom: 20px;
+    color: #2e7d32;
+}
+
+/* GRID */
+.products {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 220px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.card h3 {
+    margin: 10px 0;
+}
+
+.card button {
+    padding: 8px 15px;
+    border: none;
+    background: #2e7d32;
+    color: white;
+    cursor: pointer;
+}
+
+/* FOOTER */
+footer {
+    background: #2e7d32;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+.card {
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+button:hover {
+    background: #1b5e20;
+}

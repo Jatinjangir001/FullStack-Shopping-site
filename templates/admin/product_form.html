@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 600px;">
+    <h2 style="text-align:center; color: var(--dark-green); margin-bottom: 2rem;">
+        {% if product %}Edit Product{% else %}Add New Product{% endif %}
+    </h2>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <input type="text" id="name" name="name" value="{{ product.name if product else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" required>{{ product.description if product else '' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="price">Price (₹)</label>
+            <input type="number" step="0.01" id="price" name="price" value="{{ product.price if product else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                <option value="Hair Oil" {% if product and product.category == 'Hair Oil' %}selected{% endif %}>Hair Oil</option>
+                <option value="Shampoo" {% if product and product.category == 'Shampoo' %}selected{% endif %}>Shampoo</option>
+                <option value="Serum" {% if product and product.category == 'Serum' %}selected{% endif %}>Serum</option>
+                <option value="Comb" {% if product and product.category == 'Comb' %}selected{% endif %}>Comb</option>
+                <option value="Other" {% if product and product.category == 'Other' %}selected{% endif %}>Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sizes">Available Sizes & Prices (e.g., 50ml:100, 100ml:180). Leave empty if no variations.</label>
+            {% set sizes_str = '' %}
+            {% if product and product.sizes %}
+                {% set sizes_list = [] %}
+                {% for s in product.sizes %}
+                    {% if s is mapping %}
+                        {% set _ = sizes_list.append(s.size ~ ':' ~ s.price|string) %}
+                    {% else %}
+                        {% set _ = sizes_list.append(s) %}
+                    {% endif %}
+                {% endfor %}
+                <input type="text" id="sizes" name="sizes" value="{{ sizes_list|join(', ') }}">
+            {% else %}
+                <input type="text" id="sizes" name="sizes" value="">
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="image">Product Image {% if product and product.image_url %}(Current: {{ product.image_url.split('/')[-1] }}){% endif %}</label>
+            <input type="file" id="image" name="image" accept="image/*">
+        </div>
+        
+        <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+            <input type="checkbox" id="out_of_stock" name="out_of_stock" style="width: auto;" {% if product and product.is_out_of_stock %}checked{% endif %}>
+            <label for="out_of_stock" style="margin-bottom: 0;">Mark as Out of Stock</label>
+        </div>
+        
+        <button type="submit" class="btn-primary add-to-cart-btn" style="width: 100%;">
+            {% if product %}Update Product{% else %}Save Product{% endif %}
+        </button>
+    </form>
+</div>
+{% endblock %}
